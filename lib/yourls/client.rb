@@ -7,7 +7,7 @@ module Yourls
     def initialize(host, api_key, options = {})
       @host, @api_key = host, api_key
       @base_uri = File.join(host, 'yourls-api.php')
-      @server_offset = options[:offset] || 0.seconds
+      @server_offset = Integer(options[:offset] || 0)
     end
 
     def stats(options = {})
@@ -29,7 +29,7 @@ module Yourls
       signature = Digest::MD5.hexdigest(timestamp.to_s + @api_key)
 
       query ||= {}
-      query.merge!(:timestamp => timestamp, :signature => signature, :action => action, :format => 'json') 
+      query.merge!(:timestamp => timestamp, :signature => signature, :action => action, :format => 'json')
 
       response = self.class.get(@base_uri, :query => query)
 
